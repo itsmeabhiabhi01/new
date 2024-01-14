@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Network Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-c5Y3s7yEmWtrAV+PIJw+AmO9ZC+zh7z6u9D/wUxmAFZtzxRUg0p0FFZgep0uP9S8K9QfjJKdIzE1UCy2doCSdQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #141414; /* Darker Background */
+            color: #fff; /* White Text */
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        header, nav, footer {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            background: linear-gradient(45deg, #1e90ff, #4b0082);
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        #logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #profile {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #3498db; /* Light Blue */
+        }
+
+        nav {
+            background: linear-gradient(135deg, #663399, #00ced1);
+            padding: 10px;
+            text-align: center;
+        }
+
+        #search-bar {
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            width: 70%;
+            font-size: 16px;
+            background-color: #333; /* Dark Gray Input Background */
+            color: #fff;
+        }
+
+        #filter-section {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .filter-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px;
+            color: #3498db; /* Light Blue */
+        }
+
+        .filter-checkbox {
+            margin-right: 15px;
+        }
+
+        #groups {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            padding: 10px;
+        }
+
+        .group-card {
+            width: 300px;
+            background: linear-gradient(135deg, #483d8b, #9400d3);
+            border-radius: 8px;
+            margin: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .group-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .group {
+            border: 2px solid #3498db;
+            padding: 10px;
+            text-align: center;
+            margin-top: 10px;
+            background-color: #333;
+            border-radius: 8px;
+        }
+
+        .group button, .join-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+        }
+
+        .group button:hover {
+            background: linear-gradient(135deg, #000080, #800080);
+        }
+
+        .join-button:hover {
+            background: linear-gradient(135deg, #006400, #32CD32);
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(135deg, #1e90ff, #4b0082);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        #bottom-buttons {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #1e90ff, #4b0082);
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s ease-in-out;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #000080, #800080);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #333;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #fff;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #bbb;
+        }
+
+        /* Dark Mode */
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode input[type="checkbox"] {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div id="logo">Social Network Hub</div>
+        <div id="profile">Your Profile</div>
+    </header>
+
+    <nav>
+        <input type="text" id="search-bar" placeholder="Search for connections...">
+        <div id="filter-section">
+            <span class="filter-label">Interests:</span>
+            <input type="checkbox" class="filter-checkbox" id="travel"> <label for="travel">Travel</label>
+            <input type="checkbox" class="filter-checkbox" id="culture"> <label for="culture">Culture</label>
+            <input type="checkbox" class="filter-checkbox" id="tech"> <label for="tech">Tech</label>
+            <input type="checkbox" class="filter-checkbox" id="food"> <label for="food">Food</label>
+            <!-- Add more interests as needed -->
+        </div>
+        <div id="groups">
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇪🇸</span><br>
+                    Spanish Learners<br>
+                    Connect with others<br>
+                    <button><i class="fas fa-user-friends"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇫🇷</span><br>
+                    French Speakers<br>
+                    Practice your French<br>
+                    <button><i class="fas fa-comments"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇮🇹</span><br>
+                    Italian Language Exchange<br>
+                    Share your passion<br>
+                    <button><i class="fas fa-share"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇨🇳</span><br>
+                    Chinese Conversation<br>
+                    Improve your skills<br>
+                    <button><i class="fas fa-lightbulb"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇯🇵</span><br>
+                    Japanese Language Exchange<br>
+                    Learn and practice Japanese<br>
+                    <button><i class="fas fa-book"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇷🇺</span><br>
+                    Russian Speakers Community<br>
+                    Connect with Russian learners<br>
+                    <button><i class="fas fa-user-friends"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇰🇷</span><br>
+                    Korean Language Enthusiasts<br>
+                    Share your Korean journey<br>
+                    <button><i class="fas fa-share-square"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇵🇹</span><br>
+                    Portuguese Learning Club<br>
+                    Improve your Portuguese skills<br>
+                    <button><i class="fas fa-graduation-cap"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            
+            <!-- Additional Group Cards -->
+            
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇩🇪</span><br>
+                    German Language Exchange<br>
+                    Practice German with enthusiasts<br>
+                    <button><i class="fas fa-language"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇳🇱</span><br>
+                    Dutch Speakers Community<br>
+                    Connect with Dutch learners<br>
+                    <button><i class="fas fa-users"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+            
+            <div class="group-card">
+                <div class="group">
+                    <span style="font-size: 24px;">🇧🇷</span><br>
+                    Brazilian Culture Enthusiasts<br>
+                    Explore the beauty of Brazil<br>
+                    <button><i class="fas fa-umbrella-beach"></i></button>
+                    <button class="join-button">Join</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <footer>
+        <div id="bottom-buttons">
+            <button><i class="fas fa-home"></i> Home</button>
+            <button><i class="fas fa-search"></i> Search</button>
+            <button><i class="fas fa-plus"></i> Add</button>
+            <button><i class="fas fa-bell"></i> Notifications</button>
+            <button><i class="fas fa-user"></i> Profile</button>
+            <button onclick="toggleDarkMode()"><i class="fas fa-moon"></i> Dark Mode</button>
+            <button onclick="openSettingsModal()"><i class="fas fa-cog"></i> Settings</button>
+            <button><i class="fas fa-question-circle"></i> Help</button>
+        </div>
+    </footer>
+</body>
+
+</html>
